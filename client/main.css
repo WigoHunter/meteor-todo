@@ -91,11 +91,25 @@ form {
   align-items: center;
   justify-content: center;
   box-shadow: 2px 2px 3px -1px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+form.not-logged-in {
+  height: 100vh;
 }
 
 form h2 {
   color: var(--darkBlue);
   font-size: 26px;
+}
+
+form h3 {
+  font-size: 19px;
+  margin: 0;
+  width: 200px;
+  text-align: center;
+  color: var(--lightBlue);
+  font-weight: normal;
 }
 
 input[type='text'] {
@@ -107,9 +121,17 @@ input[type='text'] {
   outline: 0;
 }
 
-.list-container ul {
+.list-container form ~ ul {
   padding: 0;
   width: 80%;
+  transition: all 0.3s ease;
+}
+
+.list-container form.not-logged-in ~ ul {
+  margin: 0;
+}
+
+.list-container form.logged-in ~ ul {
   margin: 60px 10%;
 }
 

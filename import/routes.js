@@ -7,7 +7,7 @@ import TodoListContainer from './ui/Todos.js';
 export const renderRoutes = () => (
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <IndexRoute component={About} />
+      <IndexRoute component={TodoListContainer} />
       <Route path="about" component={About} />
       <Route path="todo" component={TodoListContainer} />
     </Route>

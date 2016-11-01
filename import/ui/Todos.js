@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { Todos } from '../api/todos.js';
@@ -13,37 +14,38 @@ export class TodoList extends React.Component {
     const text = ReactDOM.findDOMNode(this.refs.input).value;
 
     //Push to DB
-    Todos.insert({
-      text,
-      createdAt: new Date(),
-      done: false,
-    });
+    Meteor.call('todo.insert', text);
 
     //Clear form
     ReactDOM.findDOMNode(this.refs.input).value = '';
   }
 
   handleDelete(id) {
-    Todos.remove(id);
+    Meteor.call('todo.remove', id);
   }
 
   handleDone(id, status) {
-    Todos.update(id, {
-      $set: {done: !status}
-    })
+    Meteor.call('todo.update', id, status);
   }
 
   render() {
     return (
       <div className="list-container">
-        <form onSubmit={this.handleSubmit.bind(this)}>
+
+        <form
+          onSubmit={this.handleSubmit.bind(this)}
+          className={this.props.currentUser ? "logged-in" : "not-logged-in"}
+        >
           <h2>Todo List 2.0</h2>
-          <input
-            type="text"
-            ref="input"
-            id="input"
-            placeholder="New todo?"
-          />
+          {this.props.currentUser ?
+            <input
+              type="text"
+              ref="input"
+              id="input"
+              placeholder="New todo?"
+            /> :
+            <h3>Please login first to use the app</h3>
+          }
         </form>
         <ul>
           {this.props.todos.map((todo) => (
@@ -82,8 +84,10 @@ const Todo = ({ todo, onClickDelete, onClickDone }) => (
 );
 
 const TodoListContainer = createContainer(() => {
+  Meteor.subscribe('todos');
   return {
     todos: Todos.find({}).fetch(),
+    currentUser: Meteor.user(),
   }
 }, TodoList);
 
